@@ -1,6 +1,6 @@
 CC=cc
 CFLAGS=-Wall -Wextra -std=c11
-LIBS=
+LIBS=-lmxml
 HEADERS=include/
 SRC=src/decoder.c src/nema_parser.c
 BLD=build
