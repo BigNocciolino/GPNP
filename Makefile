@@ -7,7 +7,7 @@ BLD=build
 
 decoder: $(SRC)
 	mkdir -p build
-# 	mkdir -p out
+	mkdir -p out
 	$(CC) $(CFLAGS) -o $(BLD)/decoder -I $(HEADERS) $(SRC) $(LIBS)
 
 clean:
