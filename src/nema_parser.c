@@ -10,9 +10,6 @@ https://stackoverflow.com/a/1095006
 */
 
 // Parse the bare minimum to obtain all data
-// FIXME it not work with consecutive ,
-// This not take the last value beacouse to take the value it needs to find the other ",". 
-// So I need to find a way to take before
 void parse_rmc(struct GPRMC *data, char sentence[]) {
     // This keeps track of in witch element of the sentence we are
     int id = 1;
@@ -49,5 +46,8 @@ void parse_rmc(struct GPRMC *data, char sentence[]) {
         data->postion_mode = *elements[11];
         strncpy(data->checksum, elements[11]+2, 2);
     }
-    //free(elements);
+    // Free memory
+    for (int i=0; i<id-1; i++) {
+        free(elements[i]);
+    }
 }
