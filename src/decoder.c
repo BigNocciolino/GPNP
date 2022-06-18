@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
        file_path = argv[1];
        xml_path = argv[2];
     }else {
-        printf("Usage:\n./decoder [file]\n");
+        printf("Usage:\n./decoder [file.txt] [out.gpx]\n");
         exit(1);
     }
 
