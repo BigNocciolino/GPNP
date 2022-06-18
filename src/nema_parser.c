@@ -10,7 +10,7 @@ https://stackoverflow.com/a/1095006
 */
 
 // Parse the bare minimum to obtain all data
-void parse_rmc(struct GPRMC *data, char sentence[]) {
+void parse_rmc(GPRMC *data, char sentence[]) {
     // This keeps track of in witch element of the sentence we are
     int id = 1;
     size_t len = strlen(sentence);
