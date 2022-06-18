@@ -11,4 +11,4 @@ decoder: $(SRC)
 	$(CC) $(CFLAGS) -o $(BLD)/decoder -I $(HEADERS) $(SRC) $(LIBS)
 
 clean:
-	rm -rf build
+	rm -rf build/ out/
