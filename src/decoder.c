@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     char *file_path = NULL;
     char *xml_path = NULL;
     FILE *nema_file, *xml_file;
-    struct GPRMC rmc;
+    GPRMC rmc;
 
     // XMl nodes
     mxml_node_t *xml;
