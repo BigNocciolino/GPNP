@@ -17,16 +17,19 @@ struct Latitude {
     float latitude;
     char direction;
 };
+typedef struct Latitude Latitude;
 
 struct Longitude {
     float longitude;
     char direction;
 };
+typedef struct Longitude Longitude;
 
 struct Magnetic_Variation {
     float variation;
     char direction;
 };
+typedef struct Magnetic_Variation Magnetic_Variation;
 
 struct GPRMC
 {
@@ -42,6 +45,7 @@ struct GPRMC
     char postion_mode;
     char checksum[2];
 };
+typedef struct GPRMC GPRMC;
 
 
 void parse_rmc(struct GPRMC *data, char sentence[]);
