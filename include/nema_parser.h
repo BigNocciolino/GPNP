@@ -5,7 +5,7 @@
 // This include $ char
 #define NEMA_ID_LEN 7
 // The max leght for each nema element in a senctence
-#define MAX_ELEMENT_LEN 10
+#define MAX_ELEMENT_LEN 20
 // This include the $ char and the newline char
 #define SENT_MAX_LEN 81
 // Number of elements in a GPRMC sentece
