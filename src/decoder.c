@@ -34,8 +34,8 @@ int main(int argc, char **argv) {
 
     xml = mxmlNewXML("1.0");
     gpx = mxmlNewElement(xml, "gpx");
-        trk = mxmlNewElement(gpx, "trk");
-            trkseg = mxmlNewElement(trk, "trkseg");
+    trk = mxmlNewElement(gpx, "trk");
+    trkseg = mxmlNewElement(trk, "trkseg");
 
     
     if (argc > 2) {
@@ -62,7 +62,6 @@ int main(int argc, char **argv) {
             // This is a NEMA sentece
             strncpy(sent_id, sentence, 6);
             if (strcmp(sent_id, "$GPRMC") == 0) {
-                // No newline char sience the sentece have it
                 parse_rmc(&rmc, sentence);
                 trkpt = mxmlNewElement(trkseg, "trkpt");
                 memset(element, 0, sizeof(element));
@@ -78,12 +77,11 @@ int main(int argc, char **argv) {
     } 
 
     xml_file = fopen(xml_path, "w");
-    if (!xml_file) {
-        printf("Could not open gpx file %s\n", xml_path);
-        // mabye exit
-    }else {
+    if (xml_file) {
         mxmlSaveFile(xml, xml_file, MXML_NO_CALLBACK);
         fclose(xml_file);
+    }else {
+        printf("Could not open gpx file %s\n", xml_path);
     }
 
     fclose(nema_file);
