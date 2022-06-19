@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 #include <mxml.h>
 
 #include "nema_parser.h"
@@ -38,7 +39,8 @@ int main(int argc, char **argv) {
 
     nema_file = fopen(file_path, "r");
     if (!nema_file) {
-        printf("Culd not open file %s\n", file_path);
+        printf("Culd not open file: %s\n", file_path);
+        printf("ERROR: %s\n", strerror(errno));
         exit(1);
     }
 
@@ -77,6 +79,7 @@ int main(int argc, char **argv) {
         fclose(xml_file);
     }else {
         printf("Could not open gpx file %s\n", xml_path);
+        printf("ERROR: %s\n", strerror(errno));
     }
 
     fclose(nema_file);
