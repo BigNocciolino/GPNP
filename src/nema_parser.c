@@ -12,7 +12,6 @@ https://stackoverflow.com/a/1095006
 */
 
 // Parse the bare minimum to obtain all data
-// TODO move all atoi to strtol
 void parse_rmc(GPRMC *data, char sentence[]) {
     // This keeps track of in witch element of the sentence we are
     int id = 1;
@@ -58,18 +57,17 @@ void parse_rmc(GPRMC *data, char sentence[]) {
 // Utils
 void format_time(struct Time *t, char time[]) {
     char buf[2];
-    char *ptr;
     if (strlen(time) >= 6) {
         // We tecnically have all the arguments 
         // Hour
         strncpy(buf, time, 2);
-        t->hour = strtol(buf, &ptr, 10);
+        t->hour = atoi(buf);
         memset(buf, 0, sizeof(buf));
         strncpy(buf, time+2, 2);
-        t->minutes = strtol(buf, &ptr, 10);
+        t->minutes = atoi(buf);
         memset(buf, 0, sizeof(buf));
         strncpy(buf, time+4, 2);
-        t->seconds = strtol(buf, &ptr, 10);
+        t->seconds = atoi(buf);
     }
 }
 
@@ -80,13 +78,13 @@ void format_date(struct Date *d, char date[]) {
         // We tecnically have all the arguments 
         // Hour
         strncpy(buf, date, 2);
-        d->day = strtol(buf, &ptr, 10);
+        d->day = atoi(buf);
         memset(buf, 0, sizeof(buf));
         strncpy(buf, date+2, 2);
-        d->month = strtol(buf, &ptr, 10);
+        d->month = atoi(buf);
         memset(buf, 0, sizeof(buf));
         strncpy(buf, date+4, 2);
-        d->year = strtol(buf, &ptr, 10);
+        d->year = atoi(buf);
     }
 }
 
@@ -100,36 +98,32 @@ char *serialize_coords(int deg, int minutes) {
 
 void save_lat(Latitude *lat, char *data) {
     int n;
-    char *ptr;
-    char *p;
     char buf[20] = {0};
     // remove starting 0
     n = strspn(data, "0");
     if(data[n] != '\0' ) {
         // Get the first 2 chars, they are degrees
         strncpy(buf, &data[n], 2);
-        lat->degrees = strtol(buf, &ptr, 10);
+        lat->degrees = atoi(buf);
         memset(buf, 0, sizeof(buf));
         // Get all the remaning chars, they also include the dot
         strncpy(buf, &data[n]+2, sizeof(buf)-2);
         removeChar(buf, '.');
-        lat->minutes = strtol(buf, &p, 10);
+        lat->minutes = atoi(buf);
     }
 }
 
 void save_lng(Longitude *lng, char *data) {
     int n;
-    char *ptr;
-    char *p;
     char buf[20] = {0};
     // remove starting 0
     n = strspn(data, "0");
     if(data[n] != '\0' ) {
         strncpy(buf, &data[n], 2);
-        lng->degrees = strtol(buf, &ptr, 10);
+        lng->degrees = atoi(buf);
         memset(buf, 0, sizeof(buf));
         strncpy(buf, &data[n]+2, sizeof(buf)-2);
         removeChar(buf, '.');
-        lng->minutes = strtol(buf, &p, 10);
+        lng->minutes = atoi(buf);
     }
 }
