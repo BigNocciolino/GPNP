@@ -2,7 +2,7 @@ CC=cc
 CFLAGS=-Wall -Wextra -std=c11
 LIBS=-lmxml
 HEADERS=include/
-SRC=src/decoder.c src/nema_parser.c
+SRC=src/decoder.c src/nema_parser.c src/utils.c
 BLD=build
 
 decoder: $(SRC)

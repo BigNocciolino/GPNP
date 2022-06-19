@@ -4,18 +4,8 @@
 #include <mxml.h>
 
 #include "nema_parser.h"
+#include "utils.h"
 
-void print_rmc(struct GPRMC *rmc) {
-    printf("Time: %s\n", rmc->time);
-    printf("Status: %c\n", rmc->status);
-    printf("Latitude: %5.4f,%c\n", rmc->lat.latitude, rmc->lat.direction);
-    printf("Longitude: %5.4f,%c\n", rmc->lng.longitude, rmc->lng.direction);
-    printf("Speed: %3.2f\n", rmc->speed);
-    printf("Data: %s\n", rmc->date);
-    printf("Mode: %c\n", rmc->postion_mode);
-    printf("Checksum: %s\n", rmc->checksum);
-    return;
-}
 
 int main(int argc, char **argv) {
 
@@ -63,15 +53,20 @@ int main(int argc, char **argv) {
             strncpy(sent_id, sentence, 6);
             if (strcmp(sent_id, "$GPRMC") == 0) {
                 parse_rmc(&rmc, sentence);
+                char *iso_timestamp = convert_to_ISO(&rmc.date, &rmc.time);
+                char *ser_coords = serialize_coords(rmc.lat.degrees, rmc.lat.minutes);
                 trkpt = mxmlNewElement(trkseg, "trkpt");
                 memset(element, 0, sizeof(element));
-                sprintf(element, "%f", rmc.lat.latitude);
+                sprintf(element, "%s", ser_coords);
                 mxmlElementSetAttr(trkpt, "lat", element);
                 memset(element, 0, sizeof(element));
-                sprintf(element, "%f", rmc.lng.longitude);
+                ser_coords = serialize_coords(rmc.lng.degrees, rmc.lng.minutes);
+                sprintf(element, "%s", ser_coords);
                 mxmlElementSetAttr(trkpt, "lon", element);
                 time = mxmlNewElement(trkseg, "time");
-                mxmlNewText(time, 0, rmc.time);
+                mxmlNewText(time, 0, iso_timestamp);
+                free(iso_timestamp);
+                free(ser_coords);
             }
         } 
     } 
