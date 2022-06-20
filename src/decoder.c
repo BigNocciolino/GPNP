@@ -56,19 +56,16 @@ int main(int argc, char **argv) {
             if (strcmp(sent_id, "$GPRMC") == 0) {
                 parse_rmc(&rmc, sentence);
                 char *iso_timestamp = convert_to_ISO(&rmc.date, &rmc.time);
-                char *ser_coords = serialize_coords(rmc.lat.degrees, rmc.lat.minutes);
                 trkpt = mxmlNewElement(trkseg, "trkpt");
                 memset(element, 0, sizeof(element));
-                sprintf(element, "%s", ser_coords);
+                sprintf(element, "%f", rmc.latitude);
                 mxmlElementSetAttr(trkpt, "lat", element);
                 memset(element, 0, sizeof(element));
-                ser_coords = serialize_coords(rmc.lng.degrees, rmc.lng.minutes);
-                sprintf(element, "%s", ser_coords);
+                sprintf(element, "%f", rmc.longitude);
                 mxmlElementSetAttr(trkpt, "lon", element);
                 time = mxmlNewElement(trkseg, "time");
                 mxmlNewText(time, 0, iso_timestamp);
                 free(iso_timestamp);
-                free(ser_coords);
             }
         } 
     } 

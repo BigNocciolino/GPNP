@@ -36,10 +36,8 @@ void parse_rmc(GPRMC *data, char sentence[]) {
         // Assign the element into the array to the struct
         format_time(&data->time, elements[0]);
         data->status = *elements[1];
-        save_lat(&data->lat, elements[2]);
-        data->lat.direction = *elements[3];
-        save_lng(&data->lng, elements[4]);
-        data->lng.direction = *elements[5];
+        save_coor(&data->latitude, elements[2], *elements[3], LATITUDE);
+        save_coor(&data->longitude, elements[4], *elements[5], LONGITUDE);
         data->speed = atof(elements[6]);
         data->track_angle = atof(elements[7]);
         format_date(&data->date, elements[8]);
@@ -73,7 +71,6 @@ void format_time(struct Time *t, char time[]) {
 
 void format_date(struct Date *d, char date[]) {
     char buf[2];
-    char *ptr;
     if (strlen(date) == 6) {
         // We tecnically have all the arguments 
         // Hour
@@ -88,42 +85,28 @@ void format_date(struct Date *d, char date[]) {
     }
 }
 
-// TODO parametrize the size
-char *serialize_coords(int deg, int minutes) {
-    char *buf = malloc(sizeof(char) * 20);
-    // Make the number positive if is N or E
-    sprintf(buf, "%d.%d", deg, minutes);
-    return buf;
-}
 
-void save_lat(Latitude *lat, char *data) {
-    int n;
-    char buf[20] = {0};
-    // remove starting 0
-    n = strspn(data, "0");
-    if(data[n] != '\0' ) {
-        // Get the first 2 chars, they are degrees
-        strncpy(buf, &data[n], 2);
-        lat->degrees = atoi(buf);
-        memset(buf, 0, sizeof(buf));
-        // Get all the remaning chars, they also include the dot
-        strncpy(buf, &data[n]+2, sizeof(buf)-2);
-        removeChar(buf, '.');
-        lat->minutes = atoi(buf);
-    }
-}
+// both function are incorrect, look at https://it.wikipedia.org/wiki/WGS84
+void save_coor(float *nema_coor, char *data, char direction, int type) {
+    float l, ss;
+    int dd;
+    l = atof(data);
 
-void save_lng(Longitude *lng, char *data) {
-    int n;
-    char buf[20] = {0};
-    // remove starting 0
-    n = strspn(data, "0");
-    if(data[n] != '\0' ) {
-        strncpy(buf, &data[n], 2);
-        lng->degrees = atoi(buf);
-        memset(buf, 0, sizeof(buf));
-        strncpy(buf, &data[n]+2, sizeof(buf)-2);
-        removeChar(buf, '.');
-        lng->minutes = atoi(buf);
+    // DD + SS /60
+    // DD = int(float(l)/100)
+    // SS = float(l) - DD *100
+    // lat.value = DD + SS/60
+
+    dd = (int) l / 100;
+    ss = (l - dd*100);
+    *nema_coor = dd + (ss/60);    
+    if (type == LATITUDE) {
+        if (direction == 'S') {
+            *nema_coor *= -1;
+        }
+    }else if (type == LONGITUDE) {
+        if (direction == 'W') {
+            *nema_coor *= -1;
+        }
     }
 }

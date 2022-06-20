@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#define LATITUDE 0
+#define LONGITUDE 1
+
 #define NEMA_IDS 5
 // This include $ char
 #define NEMA_ID_LEN 7
@@ -28,20 +31,6 @@ struct Date
     int8_t year;
 };
 
-struct Latitude {
-    int degrees;
-    int minutes;
-    char direction;
-};
-typedef struct Latitude Latitude;
-
-struct Longitude {
-    int degrees;
-    int minutes;
-    char direction;
-};
-typedef struct Longitude Longitude;
-
 struct Magnetic_Variation {
     float variation;
     char direction;
@@ -51,8 +40,8 @@ typedef struct Magnetic_Variation Magnetic_Variation;
 struct GPRMC {
     struct Time time;
     char status;
-    Latitude lat;
-    Longitude lng;
+    float latitude;
+    float longitude;
     // The speed is stored in knots
     float speed;
     float track_angle;
@@ -69,9 +58,7 @@ void parse_rmc(struct GPRMC *data, char sentence[]);
 // Utils
 void format_time(struct Time *t, char time[]);
 void format_date(struct Date *d, char date[]);
-char *serialize_coords(int deg, int minutes);
 
-void save_lat(Latitude *lat, char *data);
-void save_lng(Longitude *lng, char *data);
+void save_coor(float *nema_coor, char *data, char direction, int type);
 
 #endif
