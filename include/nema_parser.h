@@ -17,7 +17,7 @@
 //static const char *NEMA[NEMA_IDS] = {"$GPRMC", "$GPVTG", "$GPGGA", "$GPGSV", "$GPGLL"};
 
 // GPRMC
-#define GPRMC_ELEMENTS 12
+#define GPRMC_ELEMENTS 13
 // GPGGA
 #define GPGGA_ELEMENTS 15
 

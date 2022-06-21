@@ -69,9 +69,6 @@ int main(int argc, char **argv) {
                 mxmlNewText(time, 0, iso_timestamp);
                 free(iso_timestamp);
             }
-            if (strcmp(sent_id, "$GPGGA") == 0) {
-                parse_gga(&gga, sentence);
-            }
         } 
     } 
 
