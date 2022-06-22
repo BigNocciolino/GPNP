@@ -110,12 +110,6 @@ void parse_vtg(GPVTG *data, char sentence[]) {
             }
         }
         
-        printf("%s\n", sentence);
-        for (int j=0; j<id-1; j++) {
-            printf("%s,", elements[j]);
-        }
-        printf(" ]\n");
-
         data->track_deg_true = atof(elements[0]);
         // Skip T char
         data->track_deg_magnetic = atof(elements[2]);
@@ -151,12 +145,6 @@ void parse_gll(GPGLL *data, char sentence[]) {
                start = i+1;
             }
         }
-
-        printf("%s\n", sentence);
-        for (int j=0; j<id-1; j++) {
-            printf("%s,", elements[j]);
-        }
-        printf(" ]\n");
 
         save_coor(&data->latitude, elements[0], *elements[1], LATITUDE);
         save_coor(&data->longitude, elements[2], *elements[3], LONGITUDE);
