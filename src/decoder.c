@@ -14,7 +14,6 @@ int main(int argc, char **argv) {
     char *xml_path = NULL;
     FILE *nema_file, *xml_file;
     GPRMC rmc;
-    GPGGA gga;
 
     // XMl nodes
     mxml_node_t *xml;
