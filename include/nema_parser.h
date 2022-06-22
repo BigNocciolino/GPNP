@@ -16,12 +16,11 @@
 // Number of elements in a GPRMC sentece
 //static const char *NEMA[NEMA_IDS] = {"$GPRMC", "$GPVTG", "$GPGGA", "$GPGSV", "$GPGLL"};
 
-// GPRMC
+// The number of elements contains the id e.i: $GPGLL
 #define GPRMC_ELEMENTS 13
-// GPGGA
 #define GPGGA_ELEMENTS 15
-// GPVTG
 #define GPVTG_ELEMENTS 10
+#define GPGLL_ELEMENTS 8
 
 struct Time {
    int8_t hour;
@@ -86,9 +85,19 @@ struct GPVTG {
 };
 typedef struct GPVTG GPVTG;
 
+struct GPGLL {
+    float latitude;
+    float longitude;
+    struct Time time;
+    char status;
+    char checksum[2];
+};
+typedef struct GPGLL GPGLL;
+
 void parse_rmc(GPRMC *data, char sentence[]);
 void parse_gga(GPGGA *data, char sentence[]);
 void parse_vtg(GPVTG *data, char sentence[]);
+void parse_gll(GPGLL *data, char sentence[]);
 
 // Utils
 void format_time(struct Time *t, char time[]);

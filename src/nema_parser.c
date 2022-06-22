@@ -132,6 +132,40 @@ void parse_vtg(GPVTG *data, char sentence[]) {
     } 
 }
 
+void parse_gll(GPGLL *data, char sentence[]) {
+    int id = 1;
+    size_t len = strlen(sentence);
+    char buf[MAX_ELEMENT_LEN+1];
+    char *elements[GPGLL_ELEMENTS-1];
+
+    if (len <= SENT_MAX_LEN) {
+        for (size_t i=7, start = i; i<len; i++) {
+            if (sentence[i] == ',' || (id == GPGLL_ELEMENTS-1 && len-i == 1)) {
+                // allocate the memory to store the string
+                memset(buf, 0, sizeof(buf));
+                strncpy(buf, sentence+start, i-start);
+                elements[id-1] = malloc(strlen(buf));
+                strcpy(elements[id-1], buf);
+                // strcpy(elements[id-1]+(sizeof(buf)), "\0");
+               id++;
+               start = i+1;
+            }
+        }
+
+        printf("%s\n", sentence);
+        for (int j=0; j<id-1; j++) {
+            printf("%s,", elements[j]);
+        }
+        printf(" ]\n");
+
+        save_coor(&data->latitude, elements[0], *elements[1], LATITUDE);
+        save_coor(&data->longitude, elements[2], *elements[3], LONGITUDE);
+        format_time(&data->time, elements[4]);
+        data->status = *elements[5];
+        strncpy(data->checksum, elements[6]+2, 2);
+    }
+}
+
 // Utils
 void format_time(struct Time *t, char time[]) {
     char buf[2];
