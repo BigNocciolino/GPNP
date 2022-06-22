@@ -11,6 +11,12 @@ https://stackoverflow.com/a/1095006
 
 */
 
+void free_elements(char **elements, size_t size) {
+   for (int i=0; i<size; i++) {
+    free(elements[i]);
+   } 
+}
+
 // Parse the bare minimum to obtain all data
 void parse_rmc(GPRMC *data, char sentence[]) {
     // This keeps track of in witch element of the sentence we are
@@ -46,10 +52,7 @@ void parse_rmc(GPRMC *data, char sentence[]) {
         data->postion_mode = *elements[11];
         strncpy(data->checksum, elements[11]+2, 2);
     }
-    // Free memory
-    for (int i=0; i<id-1; i++) {
-        free(elements[i]);
-    }
+    free_elements(elements, id-1);
 }
 
 void parse_gga(GPGGA *data, char sentence[]) {
@@ -85,9 +88,7 @@ void parse_gga(GPGGA *data, char sentence[]) {
         data->DGPS_id = atoi(elements[12]);
         strncpy(data->checksum, elements[13]+1, 2);
     }
-    for (int i=0; i<id-1; i++) {
-        free(elements[i]);
-    }
+    free_elements(elements, id-1);
 }
 
 void parse_vtg(GPVTG *data, char sentence[]) {
@@ -121,9 +122,7 @@ void parse_vtg(GPVTG *data, char sentence[]) {
         data->indicator = *elements[8];
         strncpy(data->checksum, elements[8]+1, 2);
     }
-    for (int i=0; i<id-1; i++) {
-        free(elements[i]);
-    } 
+    free_elements(elements, id-1); 
 }
 
 void parse_gll(GPGLL *data, char sentence[]) {
@@ -152,6 +151,7 @@ void parse_gll(GPGLL *data, char sentence[]) {
         data->status = *elements[5];
         strncpy(data->checksum, elements[6]+2, 2);
     }
+    free_elements(elements, id-1);
 }
 
 // Utils
