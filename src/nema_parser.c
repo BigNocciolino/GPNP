@@ -17,12 +17,12 @@ void parse_rmc(GPRMC *data, char sentence[]) {
     int id = 1;
     size_t len = strlen(sentence);
     char buf[MAX_ELEMENT_LEN+1];
-    char *elements[GPRMC_ELEMENTS];
+    char *elements[GPRMC_ELEMENTS-1];
 
     if (len <= SENT_MAX_LEN) {
         // We need to skip the first 6+1 for the comma chars (they are the nema id) 
         for (size_t i=7, start = i; i<len; i++) {
-            if (sentence[i] == ',' || (id == GPRMC_ELEMENTS && len-i == 1)) {
+            if (sentence[i] == ',' || (id == GPRMC_ELEMENTS-1 && len-i == 1)) {
                 // allocate the memory to store the string
                 memset(buf, 0, sizeof(buf));
                 strncpy(buf, sentence+start, i-start);
@@ -47,6 +47,44 @@ void parse_rmc(GPRMC *data, char sentence[]) {
         strncpy(data->checksum, elements[11]+2, 2);
     }
     // Free memory
+    for (int i=0; i<id-1; i++) {
+        free(elements[i]);
+    }
+}
+
+void parse_gga(GPGGA *data, char sentence[]) {
+    int id = 1;
+    size_t len = strlen(sentence);
+    char buf[MAX_ELEMENT_LEN+1];
+    char *elements[GPGGA_ELEMENTS-1];
+
+    if (len <= SENT_MAX_LEN) {
+        for (size_t i=7, start = i; i<len; i++) {
+            if (sentence[i] == ',' || (id == GPGGA_ELEMENTS-1 && len-i == 1)) {
+                // allocate the memory to store the string
+                memset(buf, 0, sizeof(buf));
+                strncpy(buf, sentence+start, i-start);
+                elements[id-1] = malloc(strlen(buf));
+                strcpy(elements[id-1], buf);
+                // strcpy(elements[id-1]+(sizeof(buf)), "\0");
+               id++;
+               start = i+1;
+            }
+        }
+            
+        format_time(&data->time, elements[0]);
+        save_coor(&data->latitude, elements[1], *elements[2], LATITUDE);
+        save_coor(&data->longitude, elements[3], *elements[4], LONGITUDE);
+        data->fix_quality = atoi(elements[5]);
+        data->satellites = atoi(elements[6]);
+        data->horizontal_dilution = atof(elements[7]);
+        data->altitude = atof(elements[8]);
+        //Skip one element, it is the M fixed char for altitude in meters
+        data->height_of_geoid = atof(elements[10]);
+        data->last_update = atof(elements[11]);
+        data->DGPS_id = atoi(elements[12]);
+        strncpy(data->checksum, elements[13]+1, 2);
+    }
     for (int i=0; i<id-1; i++) {
         free(elements[i]);
     }

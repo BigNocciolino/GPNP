@@ -8,15 +8,18 @@
 
 #define NEMA_IDS 5
 // This include $ char
-#define NEMA_ID_LEN 7
+#define NEMA_ID_LEN 6
 // The max leght for each nema element in a senctence
 #define MAX_ELEMENT_LEN 20
 // This include the $ char and the newline char
-#define SENT_MAX_LEN 81
+#define SENT_MAX_LEN 82
 // Number of elements in a GPRMC sentece
-#define GPRMC_ELEMENTS 12
-// TODO mabye try to use enumerations
-static const char *NEMA[NEMA_IDS] = {"$GPRMC", "$GPVTG", "$GPGGA", "$GPGSV", "$GPGLL"};
+//static const char *NEMA[NEMA_IDS] = {"$GPRMC", "$GPVTG", "$GPGGA", "$GPGSV", "$GPGLL"};
+
+// GPRMC
+#define GPRMC_ELEMENTS 13
+// GPGGA
+#define GPGGA_ELEMENTS 15
 
 struct Time {
    int8_t hour;
@@ -37,6 +40,7 @@ struct Magnetic_Variation {
 };
 typedef struct Magnetic_Variation Magnetic_Variation;
 
+// Recommended Minimum sentence C
 struct GPRMC {
     struct Time time;
     char status;
@@ -52,8 +56,26 @@ struct GPRMC {
 };
 typedef struct GPRMC GPRMC;
 
+// Global Positioning System Fix Data
+struct GPGGA {
+    struct Time time;
+    float latitude;
+    float longitude;
+    int fix_quality;
+    int satellites;
+    float horizontal_dilution;
+    // The altitude is stored in meters
+    float altitude;
+    float height_of_geoid;
+    // Last update is in seconds
+    float last_update;
+    int DGPS_id;
+    char checksum[2];
+};
+typedef struct GPGGA GPGGA;
 
-void parse_rmc(struct GPRMC *data, char sentence[]);
+void parse_rmc(GPRMC *data, char sentence[]);
+void parse_gga(GPGGA *data, char sentence[]);
 
 // Utils
 void format_time(struct Time *t, char time[]);

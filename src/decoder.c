@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
     char *xml_path = NULL;
     FILE *nema_file, *xml_file;
     GPRMC rmc;
+    GPGGA gga;
 
     // XMl nodes
     mxml_node_t *xml;
@@ -46,12 +47,13 @@ int main(int argc, char **argv) {
 
     // Read the content
     char sentence[SENT_MAX_LEN];
-    char sent_id[NEMA_ID_LEN];
+    char sent_id[NEMA_ID_LEN+1];
     char element[MAX_ELEMENT_LEN];
 
     while(fgets(sentence, sizeof(sentence), nema_file) != NULL) {
         if (sentence[0] == '$') {
             // This is a NEMA sentece
+            memset(sent_id, 0, sizeof(sent_id));
             strncpy(sent_id, sentence, 6);
             if (strcmp(sent_id, "$GPRMC") == 0) {
                 parse_rmc(&rmc, sentence);
