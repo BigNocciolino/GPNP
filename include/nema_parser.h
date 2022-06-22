@@ -20,6 +20,8 @@
 #define GPRMC_ELEMENTS 13
 // GPGGA
 #define GPGGA_ELEMENTS 15
+// GPVTG
+#define GPVTG_ELEMENTS 10;
 
 struct Time {
    int8_t hour;
@@ -73,6 +75,16 @@ struct GPGGA {
     char checksum[2];
 };
 typedef struct GPGGA GPGGA;
+
+struct GPVTG {
+    float track_deg_true;
+    float track_deg_magnetic;
+    float speed_knots;
+    float speed_kph;
+    char indicator;
+    char checksum[2];
+};
+typedef struct GPVTG GPVTG;
 
 void parse_rmc(GPRMC *data, char sentence[]);
 void parse_gga(GPGGA *data, char sentence[]);
