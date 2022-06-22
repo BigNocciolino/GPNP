@@ -90,6 +90,48 @@ void parse_gga(GPGGA *data, char sentence[]) {
     }
 }
 
+void parse_vtg(GPVTG *data, char sentence[]) {
+    int id = 1;
+    size_t len = strlen(sentence);
+    char buf[MAX_ELEMENT_LEN+1];
+    char *elements[GPVTG_ELEMENTS-1];
+
+    if (len <= SENT_MAX_LEN) {
+        for (size_t i=7, start = i; i<len; i++) {
+            if (sentence[i] == ',' || (id == GPVTG_ELEMENTS-1 && len-i == 1)) {
+                // allocate the memory to store the string
+                memset(buf, 0, sizeof(buf));
+                strncpy(buf, sentence+start, i-start);
+                elements[id-1] = malloc(strlen(buf));
+                strcpy(elements[id-1], buf);
+                // strcpy(elements[id-1]+(sizeof(buf)), "\0");
+               id++;
+               start = i+1;
+            }
+        }
+        
+        printf("%s\n", sentence);
+        for (int j=0; j<id-1; j++) {
+            printf("%s,", elements[j]);
+        }
+        printf(" ]\n");
+
+        data->track_deg_true = atof(elements[0]);
+        // Skip T char
+        data->track_deg_magnetic = atof(elements[2]);
+        // Skip M char
+        data->speed_knots = atof(elements[4]);
+        // Skip N char
+        data->speed_kph = atof(elements[6]);
+        // Skip k char
+        data->indicator = *elements[8];
+        strncpy(data->checksum, elements[8]+1, 2);
+    }
+    for (int i=0; i<id-1; i++) {
+        free(elements[i]);
+    } 
+}
+
 // Utils
 void format_time(struct Time *t, char time[]) {
     char buf[2];

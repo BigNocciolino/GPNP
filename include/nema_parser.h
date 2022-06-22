@@ -21,7 +21,7 @@
 // GPGGA
 #define GPGGA_ELEMENTS 15
 // GPVTG
-#define GPVTG_ELEMENTS 10;
+#define GPVTG_ELEMENTS 10
 
 struct Time {
    int8_t hour;
@@ -88,6 +88,7 @@ typedef struct GPVTG GPVTG;
 
 void parse_rmc(GPRMC *data, char sentence[]);
 void parse_gga(GPGGA *data, char sentence[]);
+void parse_vtg(GPVTG *data, char sentence[]);
 
 // Utils
 void format_time(struct Time *t, char time[]);
