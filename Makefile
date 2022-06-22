@@ -1,4 +1,4 @@
-CC=cc
+CC=gcc
 CFLAGS=-Wall -Wextra -std=c11
 LIBS=-lmxml
 HEADERS=include/
