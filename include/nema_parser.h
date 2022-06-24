@@ -99,10 +99,13 @@ void parse_gga(GPGGA *data, char sentence[]);
 void parse_vtg(GPVTG *data, char sentence[]);
 void parse_gll(GPGLL *data, char sentence[]);
 
-// Utils
-void format_time(struct Time *t, char time[]);
-void format_date(struct Date *d, char date[]);
-
 void save_coor(float *nema_coor, char *data, char direction, int type);
+
+// Utils
+// static void format_time(struct Time *t, char time[]);
+// static void format_date(struct Date *d, char date[]);
+
+// static void free_elements(char **elements, size_t size);
+// static int get_elements(char **elements, char sentence[], size_t elements_len);
 
 #endif
