@@ -11,6 +11,7 @@ static int get_elements(char **elements, char sentence[], size_t elements_len);
 static void format_time(struct Time *t, char time[]);
 static void format_date(struct Date *d, char date[]);
 
+// Get a pointer array and dinamucally allocate memory to store all the elements in a NEMA sentence
 static int get_elements(char **elements, char sentence[], size_t elements_len) {
     int id = 1;
     size_t len = strlen(sentence);
