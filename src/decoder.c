@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
     char *xml_path = NULL;
     FILE *nema_file, *xml_file;
     GPRMC rmc;
+    GPGSV gsv;
 
     // XMl nodes
     mxml_node_t *xml;
@@ -67,6 +68,9 @@ int main(int argc, char **argv) {
                 time = mxmlNewElement(trkseg, "time");
                 mxmlNewText(time, 0, iso_timestamp);
                 free(iso_timestamp);
+            }
+            if (strcmp(sent_id, "$GPGSV") == 0) {
+                parse_gsv(&gsv, sentence);
             }
         } 
     } 
