@@ -123,6 +123,45 @@ void parse_gll(GPGLL *data, char sentence[]) {
     free_elements(elements, len);
 }
 
+void parse_gsv(GPGSV *data, char sentence[]) {
+    size_t len;
+    char *elements[GPGSV_ELEMENTS-1];
+
+    len = get_elements(elements, sentence, GPGSV_ELEMENTS);
+
+    data->total_sentences = atoi(elements[0]);
+    data->curr_sentence = atoi(elements[1]);
+    data->total_satellites = atoi(elements[2]);
+    // can not be hard-coded, sience one sentence can have less then 4 satellites, needs a way to interpolate the sentence
+    // and find a way to calculate the number of satellites in the sentence.
+    // Mabye, get the number of total sentences and the number of the current, and calculate how many satellites are left to display
+    for (int i=0, start=3; i<4; i++, start+=4) {
+        data->satellite[i].PRN = atoi(elements[start]);
+        data->satellite[i].degrees_elevation = atoi(elements[start+1]);
+        data->satellite[i].degrees_azimuth = atoi(elements[start+2]);
+        data->satellite[i].SNR = atoi(elements[start+3]);
+    }
+    strncpy(data->checksum, elements[18]+3, 2);
+
+    // printf("%s\n", sentence);
+
+    // printf("[ ");
+    // for (int i=0; i<len; i++) {
+    //     printf("%s,", elements[i]);
+    // }
+    // printf(" ]\n");
+    
+    // for (int i=0; i<4; i++) {
+    //     printf("SAT [%i]: PRN: %i\n", i, data->satellite[i].PRN);
+    //     printf("SAT [%i]: ele_deg: %i\n", i, data->satellite[i].degrees_elevation);
+    //     printf("SAT [%i]: azi_deg: %i\n", i, data->satellite[i].degrees_azimuth);
+    //     printf("SAT [%i]: SNR: %i\n", i, data->satellite[i].SNR);
+    //     printf("\n");
+    // }
+
+    free_elements(elements, len);
+}
+
 // Utils
 static void format_time(struct Time *t, char time[]) {
     char buf[2];
