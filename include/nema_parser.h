@@ -21,6 +21,7 @@
 #define GPGGA_ELEMENTS 15
 #define GPVTG_ELEMENTS 10
 #define GPGLL_ELEMENTS 8
+#define GPGSV_ELEMENTS 20
 
 struct Time {
    int8_t hour;
@@ -40,6 +41,13 @@ struct Magnetic_Variation {
     char direction;
 };
 typedef struct Magnetic_Variation Magnetic_Variation;
+
+struct Satellite {
+    int PRN;
+    int degrees_elevation;
+    int degrees_azimuth;
+    int SNR;
+};
 
 // Recommended Minimum sentence C
 struct GPRMC {
@@ -94,10 +102,21 @@ struct GPGLL {
 };
 typedef struct GPGLL GPGLL;
 
+struct GPGSV {
+    int total_sentences;
+    int curr_sentence;
+    int total_satellites;
+    // In one sentence there are only 4 satellites
+    struct Satellite satellite[4];
+    char checksum[2];
+};
+typedef struct GPGSV GPGSV;
+
 void parse_rmc(GPRMC *data, char sentence[]);
 void parse_gga(GPGGA *data, char sentence[]);
 void parse_vtg(GPVTG *data, char sentence[]);
 void parse_gll(GPGLL *data, char sentence[]);
+void parse_gsv(GPGSV *data, char sentence[]);
 
 void save_coor(float *nema_coor, char *data, char direction, int type);
 
