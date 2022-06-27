@@ -2,22 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <mxml.h>
+#include <unistd.h>
 
 #include "nema_parser.h"
 #include "utils.h"
 #include "gpx_creator.h"
 
+void print_help();
+
 int main(int argc, char **argv) {
 
     char *file_path = NULL;
-    char *xml_path = NULL;
+    char *xml_path = "out.gpx";
     
-    if (argc > 2) {
-       file_path = argv[1];
-       xml_path = argv[2];
+    if (argc > 1) {
+        for (int i=1; i<argc; i++) {
+            if (!strcmp(argv[i], "-i")) {
+                file_path = argv[++i];
+            }else if (!strcmp(argv[i], "-o")) {
+                xml_path = argv[++i];
+            }else {
+                print_help();
+            }
+        }
     }else {
-        printf("Usage:\n./decoder [file.txt] [out.gpx]\n");
+        print_help();
         exit(1);
     }
 
@@ -26,4 +35,8 @@ int main(int argc, char **argv) {
     }
 
     return 0;
+}
+
+void print_help() {
+    printf("Usage:\n./decoder -i [file.txt] -o [out.gpx]\n");
 }
