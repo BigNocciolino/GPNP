@@ -83,9 +83,11 @@ void write_to_file(char *nema_file_path, char *gpx_file_path) {
     if (gpx_file) {
         mxmlSaveFile(xml, gpx_file, MXML_NO_CALLBACK);
         fclose(gpx_file);
+        mxmlDelete(xml);
     }else {
         printf("Could not open gpx file %s\n", gpx_file_path);
         printf("ERROR: %s\n", strerror(errno));
+        mxmlDelete(xml);
     } 
 
     fclose(nema_file);
