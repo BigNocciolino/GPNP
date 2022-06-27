@@ -21,7 +21,9 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    write_to_file(file_path, xml_path);
+    if (write_to_file(file_path, xml_path) != 0) {
+        exit(1);
+    }
 
     return 0;
 }
