@@ -7,7 +7,10 @@
 #include "utils.h"
 #include "gpx_creator.h"
 
-void write_to_file(char *nema_file_path, char *gpx_file_path) {
+// This function returns 1 if the input file can not be opened
+// -1 if the output file can not be openend
+// 0 if everything ges correctoly
+int write_to_file(char *nema_file_path, char *gpx_file_path) {
     FILE *nema_file;
     FILE *gpx_file;
     // take most of the data 
@@ -35,7 +38,7 @@ void write_to_file(char *nema_file_path, char *gpx_file_path) {
     if (!nema_file) {
         printf("Culd not open file: %s\n", nema_file_path);
         printf("ERROR: %s\n", strerror(errno));
-        exit(1);
+        return 1;
     } 
 
     // Read the content
@@ -88,7 +91,9 @@ void write_to_file(char *nema_file_path, char *gpx_file_path) {
         printf("Could not open gpx file %s\n", gpx_file_path);
         printf("ERROR: %s\n", strerror(errno));
         mxmlDelete(xml);
+        return -1;
     } 
 
     fclose(nema_file);
+    return 0;
 }
