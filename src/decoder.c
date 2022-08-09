@@ -4,8 +4,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#include "nmea_parser.h"
-#include "utils.h"
 #include "gpx_creator.h"
 
 void print_help();

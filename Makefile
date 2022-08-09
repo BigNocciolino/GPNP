@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -std=c11
-LIBS=-lmxml
+LIBS=-lmxml -lnmea
 HEADERS=include/
-SRC=src/decoder.c src/nmea_parser.c src/utils.c src/gpx_creator.c
+SRC=src/decoder.c src/util.c src/gpx_creator.c
 BLD=build
 
 decoder: $(SRC)

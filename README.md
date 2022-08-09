@@ -9,6 +9,7 @@ At the moment the program can oly parse the `$GPRMC` sentence and create a outpu
 ## Dependencies
 
 - [MXML](https://www.msweet.org/mxml/)
+- [LIBNMEA](https://github.com/BigNocciolino/libnmea)
 
 ## Build
 
