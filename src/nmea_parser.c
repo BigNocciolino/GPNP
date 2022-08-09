@@ -1,4 +1,4 @@
-#include "nema_parser.h"
+#include "nmea_parser.h"
 #include <stdlib.h>
 #include <string.h>
 

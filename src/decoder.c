@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-#include "nema_parser.h"
+#include "nmea_parser.h"
 #include "utils.h"
 #include "gpx_creator.h"
 

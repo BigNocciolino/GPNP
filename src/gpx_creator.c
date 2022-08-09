@@ -1,4 +1,4 @@
-#include "nema_parser.h"
+#include "nmea_parser.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -46,38 +46,41 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
     char sent_id[NEMA_ID_LEN+1] = {0};
 
     while(fgets(sentence, sizeof(sentence), nema_file) != NULL) {
-        // Check if is a valid nema sentence
+        // Check if is a valid nmea sentence
         if (sentence[0] == '$') {
-            // claer the current buffer 
-            memset(sent_id, 0, sizeof(sent_id)); 
-            // get the id of the sentence
-            strncpy(sent_id, sentence, 6);
-            // Find if the is the correct one
-            if (strcmp(sent_id, "$GPRMC") == 0) {
-                parse_rmc(&rmc, sentence);
-                
-                trkpt = mxmlNewElement(trkseg, "trkpt");
-                // Set all the attribute for trkpt
-                mxmlElementSetAttrf(trkpt, "lat", "%f", rmc.latitude); 
-                mxmlElementSetAttrf(trkpt, "lon", "%f", rmc.longitude);
-                // Set time element
-                time = mxmlNewElement(trkpt, "time");
-                char *iso_timestamp = convert_to_ISO(&rmc.date, &rmc.time);
-                mxmlNewText(time, 0, iso_timestamp);
-                // cler the array dinamically allocated
-                free(iso_timestamp);
-                // Store the speed
-                speed = mxmlNewElement(trkpt, "speed");
-                mxmlNewTextf(speed, 0, "%f", rmc.speed);
-            }
-            if (strcmp(sent_id, "$GPGGA") == 0) {
-                parse_gga(&gga, sentence);
+            if (sent_has_checksum(sentence, strlen(sentence)) != -1) { 
+                printf("Checksum: %d, Sent: %s", sent_calc_checksum(sentence) ,sentence);
+                // claer the current buffer 
+                memset(sent_id, 0, sizeof(sent_id)); 
+                // get the id of the sentence
+                strncpy(sent_id, sentence, 6);
+                // Find if the is the correct one
+                if (strcmp(sent_id, "$GPRMC") == 0) {
+                    parse_rmc(&rmc, sentence);
+                    
+                    trkpt = mxmlNewElement(trkseg, "trkpt");
+                    // Set all the attribute for trkpt
+                    mxmlElementSetAttrf(trkpt, "lat", "%f", rmc.latitude); 
+                    mxmlElementSetAttrf(trkpt, "lon", "%f", rmc.longitude);
+                    // Set time element
+                    time = mxmlNewElement(trkpt, "time");
+                    char *iso_timestamp = convert_to_ISO(&rmc.date, &rmc.time);
+                    mxmlNewText(time, 0, iso_timestamp);
+                    // cler the array dinamically allocated
+                    free(iso_timestamp);
+                    // Store the speed
+                    speed = mxmlNewElement(trkpt, "speed");
+                    mxmlNewTextf(speed, 0, "%f", rmc.speed);
+                }
+                if (strcmp(sent_id, "$GPGGA") == 0) {
+                    parse_gga(&gga, sentence);
 
-                elevation = mxmlNewElement(trkpt, "ele");
-                mxmlNewTextf(elevation, 0, "%f", gga.altitude);
+                    elevation = mxmlNewElement(trkpt, "ele");
+                    mxmlNewTextf(elevation, 0, "%f", gga.altitude);
 
-                satellites = mxmlNewElement(trkpt, "sat");
-                mxmlNewTextf(satellites, 0, "%d", gga.satellites);
+                    satellites = mxmlNewElement(trkpt, "sat");
+                    mxmlNewTextf(satellites, 0, "%d", gga.satellites);
+                }
             }
         }
     }
