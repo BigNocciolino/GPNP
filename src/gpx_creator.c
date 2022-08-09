@@ -42,8 +42,8 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
     } 
 
     // Read the content
-    char sentence[SENT_MAX_LEN];
-    char sent_id[NEMA_ID_LEN+1];
+    char sentence[SENT_MAX_LEN] = {0};
+    char sent_id[NEMA_ID_LEN+1] = {0};
 
     while(fgets(sentence, sizeof(sentence), nema_file) != NULL) {
         // Check if is a valid nema sentence
