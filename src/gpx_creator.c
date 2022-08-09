@@ -91,6 +91,7 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
         printf("Could not open gpx file %s\n", gpx_file_path);
         printf("ERROR: %s\n", strerror(errno));
         mxmlDelete(xml);
+        fclose(nema_file);
         return -1;
     } 
 
