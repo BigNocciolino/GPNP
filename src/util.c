@@ -1,6 +1,9 @@
 #include "util.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <nmea.h>
 
 float kn_to_ms(float kn) {
@@ -23,4 +26,11 @@ float degrees_to_decimal(int degrees, double minutes, char cardinal, uint8_t typ
         }
     }
     return decimal; 
+}
+
+int isDirectory(const char *path) {
+   struct stat statbuf;
+   if (stat(path, &statbuf) != 0)
+       return 0;
+   return S_ISDIR(statbuf.st_mode);
 }
