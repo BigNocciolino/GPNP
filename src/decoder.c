@@ -2,9 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <dirent.h>
 
 #include "gpx_creator.h"
+#include "util.h"
 
 void print_help();
 
@@ -28,9 +32,56 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    if (write_to_file(file_path, xml_path) != 0) {
-        exit(1);
+    if (isDirectory(file_path)) {
+        printf("Input path is a dir\n");
+        if (!isDirectory(xml_path)) {
+            if (mkdir(xml_path, 0700) && errno != EEXIST) {
+                printf("Error creating output dir: %s\n", xml_path); 
+                exit(1);
+            }
+            printf("Created output dir: %s\n", xml_path); 
+        }
+        printf("Init parsing\n");
+        DIR *directory;
+        struct dirent *entry;
+
+        directory = opendir(file_path);
+        if (directory == NULL) {
+            printf("Can not open dir: %s\n", xml_path);
+            exit(1);
+        }
+
+        while ( (entry = readdir(directory)) ) {
+            if (!(entry->d_type == DT_DIR)) {
+                // Build the actual file path
+                char *full_in_path = malloc(strlen(file_path) + strlen(entry->d_name) + 2);
+                sprintf(full_in_path, "%s%s", file_path, entry->d_name);
+                printf("Parsing input file: %s\n", full_in_path);
+                // Build the output file path
+                char *full_out_path = malloc(strlen(xml_path) + strlen(entry->d_name) +2 + 5);
+                sprintf(full_out_path, "%s%s", xml_path, entry->d_name);
+                char *stripped_path = remove_ext(full_out_path, '.', '/');
+                sprintf(stripped_path, "%s.gpx", stripped_path);
+                printf("Outputting in file: %s\n", stripped_path);
+                if (write_to_file(full_in_path, stripped_path) != 0) {
+                    free(full_in_path);
+                    free(full_out_path);
+                    free(stripped_path);
+                    closedir(directory);
+                    exit(1);
+                }
+                free(full_in_path);
+                free(full_out_path);
+                free(stripped_path);
+            }
+        }
+        closedir(directory);
+    }else {
+        if (write_to_file(file_path, xml_path) != 0) {
+            exit(1);
+        }
     }
+
 
     return 0;
 }
