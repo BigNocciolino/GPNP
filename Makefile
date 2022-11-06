@@ -1,14 +1,18 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -std=c11
-LIBS=-lmxml
+# CFLAGS=-fPIC -Wall -Wextra -Werror -std=c11 -g
+CFLAGS=-fPIC -Wall -Wextra -g
+LIBS=-lmxml -lnmea
 HEADERS=include/
-SRC=src/decoder.c src/nmea_parser.c src/utils.c src/gpx_creator.c
+SRC=src/decoder.c src/util.c src/gpx_creator.c
 BLD=build
 
 decoder: $(SRC)
 	mkdir -p build
 	mkdir -p out
-	$(CC) $(CFLAGS) -o $(BLD)/decoder -I $(HEADERS) $(SRC) -g $(LIBS)
+	$(CC) $(CFLAGS) -I $(HEADERS) $(SRC) $(LIBS) -o $(BLD)/decoder
+
+install:
+	cp ./build/decoder /usr/local/bin/gpgnp
 
 clean:
 	rm -rf build/ out/
