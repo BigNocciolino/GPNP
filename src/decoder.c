@@ -11,6 +11,7 @@
 #include "util.h"
 
 void print_help();
+void addLastSeparator(char *str);
 
 int main(int argc, char **argv) {
 
@@ -20,9 +21,11 @@ int main(int argc, char **argv) {
     if (argc > 1) {
         for (int i=1; i<argc; i++) {
             if (!strcmp(argv[i], "-i")) {
-                file_path = argv[++i];
+                file_path = (char *)malloc(strlen(argv[++i]));
+                strcpy(file_path, argv[i]);
             }else if (!strcmp(argv[i], "-o")) {
-                xml_path = argv[++i];
+                xml_path = (char *)malloc(strlen(argv[++i]));
+                strcpy(xml_path, argv[i]);
             }else {
                 print_help();
             }
@@ -32,16 +35,18 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+
     if (isDirectory(file_path)) {
-        printf("Input path is a dir\n");
+        addLastSeparator(file_path);
         if (!isDirectory(xml_path)) {
             if (mkdir(xml_path, 0700) && errno != EEXIST) {
                 printf("Error creating output dir: %s\n", xml_path); 
                 exit(1);
             }
             printf("Created output dir: %s\n", xml_path); 
+        }else {
+            addLastSeparator(xml_path);
         }
-        printf("Init parsing\n");
         DIR *directory;
         struct dirent *entry;
 
@@ -82,10 +87,20 @@ int main(int argc, char **argv) {
         }
     }
 
-
+    free(file_path);
+    free(xml_path);
     return 0;
 }
 
 void print_help() {
     printf("Usage:\n./decoder -i [file.txt] -o [out.gpx]\n");
+}
+
+void addLastSeparator(char *str) {
+    if (str[strlen(str) - 1] != '/') {
+        str = (char *)realloc(str, (sizeof(str) + 1));
+        // file_path[strlen(file_path) + 1] = "/";
+        strncpy((str+strlen(str)), "/", sizeof(str));
+    }
+    return;
 }
