@@ -35,15 +35,17 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-
+    // Check if the input string is a path
     if (isDirectory(file_path)) {
         addLastSeparator(file_path);
+        // Check if the output string is a path
         if (!isDirectory(xml_path)) {
             if (mkdir(xml_path, 0700) && errno != EEXIST) {
                 printf("Error creating output dir: %s\n", xml_path); 
                 exit(1);
             }
             printf("Created output dir: %s\n", xml_path); 
+            addLastSeparator(xml_path);
         }else {
             addLastSeparator(xml_path);
         }
@@ -65,19 +67,16 @@ int main(int argc, char **argv) {
                 // Build the output file path
                 char *full_out_path = malloc(strlen(xml_path) + strlen(entry->d_name) +2 + 5);
                 sprintf(full_out_path, "%s%s", xml_path, entry->d_name);
-                char *stripped_path = remove_ext(full_out_path, '.', '/');
-                sprintf(stripped_path, "%s.gpx", stripped_path);
-                printf("Outputting in file: %s\n", stripped_path);
-                if (write_to_file(full_in_path, stripped_path) != 0) {
+                change_ext(full_out_path, "gpx");
+                printf("Outputting in file: %s\n", full_out_path);
+                if (write_to_file(full_in_path, full_out_path) != 0) {
                     free(full_in_path);
                     free(full_out_path);
-                    free(stripped_path);
                     closedir(directory);
                     exit(1);
                 }
                 free(full_in_path);
                 free(full_out_path);
-                free(stripped_path);
             }
         }
         closedir(directory);
@@ -96,6 +95,7 @@ void print_help() {
     printf("Usage:\n./decoder -i [file.txt] -o [out.gpx]\n");
 }
 
+// add the separator at the end of a path string
 void addLastSeparator(char *str) {
     if (str[strlen(str) - 1] != '/') {
         str = (char *)realloc(str, (sizeof(str) + 1));

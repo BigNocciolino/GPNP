@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <assert.h>
 #include <sys/stat.h>
 #include <nmea.h>
 
@@ -35,27 +36,16 @@ int isDirectory(const char *path) {
    return S_ISDIR(statbuf.st_mode);
 }
 
-// remove_ext: removes the "extension" from a file spec.
-//   myStr is the string to process.
-//   extSep is the extension separator.
-//   pathSep is the path separator (0 means to ignore).
-// Returns an allocated string identical to the original but
-//   with the extension removed. It must be freed when you're
-//   finished with it.
-// If you pass in NULL or the new string can't be allocated,
-//   it returns NULL.
-
-char *remove_ext (char* myStr, char extSep, char pathSep) {
-    char *retStr, *lastExt, *lastPath;
+// Remove the last extension mdifying the input string
+void remove_ext (char* myStr, char extSep, char pathSep) {
+    char *lastExt, *lastPath;
 
     // Error checks and allocate string.
-    if (myStr == NULL) return NULL;
-    if ((retStr = malloc (strlen (myStr) + 1)) == NULL) return NULL;
+    assert(myStr != NULL);
 
     // Make a copy and find the relevant characters.
-    strcpy (retStr, myStr);
-    lastExt = strrchr (retStr, extSep);
-    lastPath = (pathSep == 0) ? NULL : strrchr (retStr, pathSep);
+    lastExt = strrchr (myStr, extSep);
+    lastPath = (pathSep == 0) ? NULL : strrchr (myStr, pathSep);
 
     // If it has an extension separator.
     if (lastExt != NULL) {
@@ -70,7 +60,9 @@ char *remove_ext (char* myStr, char extSep, char pathSep) {
             *lastExt = '\0';
         }
     }
+}
 
-    // Return the modified string.
-    return retStr;
+void change_ext(char *str, const char *newExt) {
+    remove_ext(str, '.', '/');
+    sprintf(str, "%s.%s", str, newExt);
 }
