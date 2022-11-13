@@ -16,15 +16,17 @@ void addLastSeparator(char *str);
 int main(int argc, char **argv) {
 
     char *file_path = NULL;
-    char *xml_path = "out.gpx";
+    char *xml_path = NULL;
     
     if (argc > 1) {
         for (int i=1; i<argc; i++) {
             if (!strcmp(argv[i], "-i")) {
-                file_path = (char *)malloc(strlen(argv[++i]));
+                if (argv[++i] == NULL) return 1;
+                file_path = (char *)malloc(strlen(argv[i]));
                 strcpy(file_path, argv[i]);
             }else if (!strcmp(argv[i], "-o")) {
-                xml_path = (char *)malloc(strlen(argv[++i]));
+                if (argv[++i] == NULL) return 1;
+                xml_path = (char *)malloc(strlen(argv[i]));
                 strcpy(xml_path, argv[i]);
             }else {
                 print_help();
@@ -33,6 +35,11 @@ int main(int argc, char **argv) {
     }else {
         print_help();
         exit(1);
+    }
+
+    if (xml_path == NULL) {
+        xml_path = (char *)malloc(sizeof(file_path));
+        strcpy(xml_path, file_path);
     }
 
     // Check if the input string is a path
