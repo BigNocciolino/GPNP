@@ -18,17 +18,25 @@ This is a little utility to parse the data coming from a gps module.
     sudo make install
 ```
 
-## Run
-
-At the moment the program accepts 2 parameters, [1]= the path to the .txt file with all the sentences, [2]= the path to the output .gpx file
+## Usage
 
 This is only an example, make sure to use your data
+#### Using single files
 ```bash
     gpnp -i data/NEMA_short.txt -o out/test.gpx
 ```
+#### Using folders
+The program will take every file in the input folder, parse and output it in the output folder.
+```bash
+  gpnp -i data/ -o out/
+```
+This will use the same folder as output
+```bash
+  gpnp -i data/
+```
+
 
 ## Future for this project 
 
 - Expand its capabilites to parse all non-proprietary `GP` sentences
-- Make it much easiner to use 
 - Create a UI (or interactive shell)
