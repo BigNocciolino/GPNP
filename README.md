@@ -1,10 +1,8 @@
-# NEMA READER
+# NMEA PARSER
 
 This is a little utility to parse the data coming from a gps module.
 
 **This project is in a really alpha state, it may contains bug**
-
-At the moment the program can oly parse the `$GPRMC` sentence and create a output gpx file with timestamps latitude and longitude
 
 ## Dependencies
 
@@ -17,6 +15,7 @@ At the moment the program can oly parse the `$GPRMC` sentence and create a outpu
     git clone https://github.com/BigNocciolino/GPS_parser.git
     cd GPS_parser/
     make
+    sudo make install
 ```
 
 ## Run
@@ -25,9 +24,8 @@ At the moment the program accepts 2 parameters, [1]= the path to the .txt file w
 
 This is only an example, make sure to use your data
 ```bash
-    ./build/decoder data/NEMA_short.txt out/test.gpx
+    gpnp -i data/NEMA_short.txt -o out/test.gpx
 ```
-
 
 ## Future for this project 
 
