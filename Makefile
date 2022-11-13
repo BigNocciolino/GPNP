@@ -12,7 +12,7 @@ decoder: $(SRC)
 	$(CC) $(CFLAGS) -I $(HEADERS) $(SRC) $(LIBS) -o $(BLD)/decoder
 
 install:
-	cp ./build/decoder /usr/local/bin/gpgnp
+	cp ./build/decoder /usr/local/bin/gpnp
 
 clean:
 	rm -rf build/ out/
