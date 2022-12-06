@@ -52,7 +52,11 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
     // FIXME library return wrong values
     while(fgets(sentence, sizeof(sentence), nema_file) != NULL) {
         sentences++;
-        data = nmea_parse(sentence, strlen(sentence), 1, 0);
+        /* should end with \r\n, or other... */
+        if (NMEA_END_CHAR_2 != sentence[strlen(sentence) - 1] || NMEA_END_CHAR_1 != sentence[strlen(sentence) - 2]) {
+            strncat(sentence, "\r\n", NMEA_MAX_LENGTH);
+        }
+        data = nmea_parse(sentence, strlen(sentence), 1);
         if (data != NULL) {
             if (NMEA_GPRMC == data->type) {
                 nmea_gprmc_s *rmc = (nmea_gprmc_s *) data;
