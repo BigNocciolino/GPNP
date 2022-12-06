@@ -2,12 +2,10 @@
 
 This is a little utility to parse the data coming from a gps module.
 
-**This project is in a really alpha state, it may contains bug**
-
 ## Dependencies
 
 - [MXML](https://www.msweet.org/mxml/)
-- [LIBNMEA](https://github.com/BigNocciolino/libnmea)
+- [LIBNMEA](https://github.com/jacketizer/libnmea)
 
 ## Build
 
@@ -38,5 +36,4 @@ This will use the same folder as output
 
 ## Future for this project 
 
-- Expand its capabilites to parse all non-proprietary `GP` sentences
 - Create a UI (or interactive shell)
