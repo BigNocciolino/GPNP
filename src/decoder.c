@@ -22,11 +22,11 @@ int main(int argc, char **argv) {
         for (int i=1; i<argc; i++) {
             if (!strcmp(argv[i], "-i")) {
                 if (argv[++i] == NULL) return 1;
-                file_path = (char *)malloc(strlen(argv[i]));
+                file_path = (char *)malloc(strlen(argv[i])+1);
                 strcpy(file_path, argv[i]);
             }else if (!strcmp(argv[i], "-o")) {
                 if (argv[++i] == NULL) return 1;
-                xml_path = (char *)malloc(strlen(argv[i]));
+                xml_path = (char *)malloc(strlen(argv[i])+1);
                 strcpy(xml_path, argv[i]);
             }else {
                 print_help();
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     }
 
     if (xml_path == NULL) {
-        xml_path = (char *)malloc(sizeof(file_path));
+        xml_path = (char *)malloc(sizeof(file_path)+1);
         strcpy(xml_path, file_path);
     }
 
@@ -89,7 +89,7 @@ int main(int argc, char **argv) {
         closedir(directory);
     }else {
         if (write_to_file(file_path, xml_path) != 0) {
-            exit(1);
+            printf("ERROR\n");
         }
     }
 

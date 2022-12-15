@@ -92,6 +92,7 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
         }else {
             failed_sents++;
         }
+        nmea_free(data);
     }
 
     printf("Failed to parse %d sentences, on %d sentences\n", failed_sents, sentences);
@@ -110,7 +111,6 @@ int write_to_file(char *nema_file_path, char *gpx_file_path) {
         return -1;
     } 
 
-    nmea_free(data);
     fclose(nema_file);
     return 0;
 }
